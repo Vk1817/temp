@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRICKCAST - TATA IPL 2026</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #1a0f2e, #05070a);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* 🟢 INVISIBLE AD LAYER 
+           This covers the whole page. First click opens the ad. */
+        #ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            cursor: pointer;
+            background: rgba(0,0,0,0);
+        }
+
+        .header {
+            padding: 18px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff4ecd;
+            text-shadow: 0 0 12px #ff4ecd;
+        }
+
+        .player-card {
+            width: 92%;
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #2a1740, #140b24);
+            box-shadow: 0 0 25px rgba(255, 0, 150, 0.2);
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 0, 150, 0.4);
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .error-text {
+            color: #ff4ecd;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .live-box {
+            margin: 12px auto;
+            width: 90px;
+            text-align: center;
+            padding: 6px;
+            border-radius: 20px;
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid red;
+            font-size: 12px;
+            color: red;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .match-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .ad-box {
+            width: 92%;
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 80, 120, 0.4);
+        }
+
+        .ad-box img {
+            width: 100%;
+            display: block;
+        }
+
+        .info-card {
+            width: 92%;
+            margin: 12px auto;
+            padding: 15px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .label { font-size: 12px; color: #aaa; }
+        .value { font-size: 16px; font-weight: 600; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div id="ad-overlay" onclick="handleAdClick()"></div>
+
+<div class="header">TATA IPL 2026</div>
+
+<div class="player-card">
+    <div class="video-container" id="videoContainer">
+        <iframe 
+            id="main-iframe"
+            src="https://allrounder-live2.pages.dev/star/star-1" 
+            allowfullscreen 
+            allow="autoplay; encrypted-media">
+        </iframe>
+    </div>
+</div>
+
+<div class="live-box">● LIVE</div>
+<div class="match-title">RCB vs SRH</div>
+
+<div class="ad-box">
+    <a href="https://wa.me/447955881183" target="_blank">
+        <img src="https://github.com/Vk1817/IPL1/blob/main/offstumphd.jpg?raw=true" alt="Banner">
+    </a>
+</div>
+
+<div class="info-card">
+    <div class="label">DATE</div>
+    <div class="value">28-03-2026</div>
+</div>
+
+<div class="info-card">
+    <div class="label">MATCH NO.</div>
+    <div class="value">1 of 74</div>
+</div>
+
+<script>
+    // --- AD LOGIC ---
+    function handleAdClick() {
+        window.open("https://offstump.com/", "_blank");
+        document.getElementById('ad-overlay').style.display = 'none';
+    }
+
+    // --- TEMPLATE CHECK ---
+    window.onload = function() {
+        const frame = document.getElementById('main-iframe');
+        const container = document.getElementById('videoContainer');
+        
+        // If the src is empty or just " ", show error
+        if (!frame.getAttribute('src') || frame.getAttribute('src').trim() === "") {
+            container.innerHTML = '<div class="error-text">⚠️ NO IFRAME SOURCE GIVEN</div>';
+        }
+    };
+</script>
+
+</body>
+</html>
