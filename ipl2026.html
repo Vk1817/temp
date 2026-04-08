@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL 2026 Live • CrickCast</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:       #f5c518;
+  --gold-glow:  rgba(245,197,24,0.35);
+  --navy:       #04091a;
+  --navy2:      #07112b;
+  --blue:       #1740a8;
+  --blue-lit:   #2563eb;
+  --red:        #c0392b;
+  --red-lit:    #ef4444;
+  --white:      #f0f6ff;
+  --muted:      #8099c4;
+  --border:     rgba(255,255,255,0.07);
+  --card-bg:    rgba(255,255,255,0.04);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{min-height:100vh;font-family:'Rajdhani',sans-serif;color:var(--white);background:var(--navy);overflow-x:hidden;}
+
+/* ── SEAM BAR ── */
+.seam-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;
+  background:linear-gradient(90deg,transparent 0%,var(--red) 15%,var(--gold) 40%,#fff 50%,var(--gold) 60%,var(--red) 85%,transparent 100%);
+}
+
+/* ── IPL BACKGROUND ── */
+.ipl-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.ipl-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%,rgba(23,64,168,0.5) 0%,transparent 65%),
+    radial-gradient(ellipse 55% 45% at 5%  70%,rgba(192,57,43,0.14) 0%,transparent 55%),
+    radial-gradient(ellipse 55% 45% at 95% 70%,rgba(245,197,24,0.1) 0%,transparent 55%),
+    radial-gradient(ellipse 80% 40% at 50% 105%,rgba(245,197,24,0.07) 0%,transparent 60%);
+}
+/* stadium beams */
+.beam{position:absolute;bottom:0;transform-origin:bottom center;filter:blur(7px);animation:beamSway 8s ease-in-out infinite;}
+.beam:nth-child(1){left:6%;width:55px;height:72vh;background:linear-gradient(0deg,transparent,rgba(245,197,24,0.11),rgba(255,255,255,0.06));animation-delay:0s;}
+.beam:nth-child(2){left:20%;width:40px;height:80vh;background:linear-gradient(0deg,transparent,rgba(37,99,235,0.12),transparent);animation-delay:-2.5s;opacity:.7;}
+.beam:nth-child(3){right:8%;width:52px;height:74vh;background:linear-gradient(0deg,transparent,rgba(245,197,24,0.10),rgba(255,255,255,0.05));animation-delay:-4.5s;}
+.beam:nth-child(4){right:22%;width:38px;height:78vh;background:linear-gradient(0deg,transparent,rgba(37,99,235,0.11),transparent);animation-delay:-7s;opacity:.8;}
+@keyframes beamSway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+
+/* pitch outline */
+.pitch{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:200px;height:300px;
+  background:repeating-linear-gradient(0deg,transparent,transparent 17px,rgba(245,197,24,0.04) 17px,rgba(245,197,24,0.04) 19px);
+  clip-path:polygon(28% 0%,72% 0%,100% 100%,0% 100%);
+}
+
+/* particles */
+.particles{position:absolute;inset:0;}
+.p{position:absolute;border-radius:50%;animation:floatUp linear infinite;pointer-events:none;}
+@keyframes floatUp{0%{transform:translateY(105vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-8vh) rotate(720deg);opacity:0;}}
+
+/* noise */
+.noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px;
+}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;height:58px;
+  background:rgba(4,9,26,0.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(245,197,24,0.18);
+}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-mark{
+  width:34px;height:34px;
+  background:linear-gradient(135deg,var(--gold),#e8920e);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;box-shadow:0 0 18px var(--gold-glow);flex-shrink:0;
+}
+.logo-name{
+  font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:2px;
+  background:linear-gradient(90deg,#fff 40%,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.logo-tag{font-size:9px;font-family:'DM Sans',sans-serif;color:var(--gold);letter-spacing:3px;font-weight:500;text-transform:uppercase;line-height:1;margin-top:1px;}
+.live-badge{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(192,57,43,0.2);border:1px solid rgba(239,68,68,0.5);
+  padding:5px 12px;border-radius:30px;
+  font-size:11px;font-weight:700;letter-spacing:2px;color:#fca5a5;
+  animation:livePulse 2s ease-in-out infinite;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;animation:blink 1.1s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.75}}
+
+/* ── LAYOUT ── */
+.container{
+  position:relative;z-index:5;
+  max-width:480px;margin:0 auto;
+  padding:14px 14px 32px;
+  display:flex;flex-direction:column;gap:13px;
+}
+
+/* ── MATCH CARD ── */
+.match-card{
+  background:linear-gradient(135deg,rgba(23,64,168,0.28),rgba(7,17,43,0.82));
+  border:1px solid rgba(245,197,24,0.22);
+  border-radius:18px;padding:16px 18px 14px;
+  position:relative;overflow:hidden;
+  animation:riseIn .45s ease both;
+}
+.match-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold) 40%,var(--red) 60%,transparent);}
+.match-card::after{content:'TATA IPL 2026';position:absolute;right:14px;top:12px;font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;color:rgba(245,197,24,0.2);}
+.match-teams{display:flex;align-items:center;justify-content:space-between;}
+.team{display:flex;flex-direction:column;gap:3px;}
+.team:last-child{align-items:flex-end;}
+.team-abbr{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;line-height:1;text-shadow:0 0 24px rgba(245,197,24,0.3);}
+.team-full{font-size:10px;font-family:'DM Sans',sans-serif;color:var(--muted);letter-spacing:.5px;font-weight:400;}
+.vs-col{display:flex;flex-direction:column;align-items:center;gap:5px;}
+.vs-divider{width:1px;height:26px;background:linear-gradient(180deg,transparent,var(--gold-glow),transparent);}
+.vs-text{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:var(--muted);}
+.match-meta{font-size:9px;font-family:'DM Sans',sans-serif;color:var(--gold);letter-spacing:2px;font-weight:600;text-transform:uppercase;}
+
+/* ── PLAYER ── */
+.player-wrap{
+  position:relative;border-radius:16px;overflow:hidden;background:#000;
+  box-shadow:0 0 0 1px rgba(245,197,24,0.2),0 12px 48px rgba(0,0,0,0.7),0 0 80px rgba(23,64,168,0.18);
+  animation:riseIn .5s ease .05s both;
+}
+.player-wrap iframe{display:block;width:100%;height:218px;border:none;}
+.click-overlay{position:absolute;inset:0;z-index:5;cursor:pointer;background:transparent;}
+.cb{position:absolute;width:14px;height:14px;z-index:6;}
+.cb-tl{top:8px;left:8px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);border-radius:2px 0 0;}
+.cb-tr{top:8px;right:8px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);border-radius:0 2px 0;}
+.cb-bl{bottom:8px;left:8px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);border-radius:0 0 0 2px;}
+.cb-br{bottom:8px;right:8px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);border-radius:0 0 2px;}
+
+/* ── CHANNEL DROPDOWN PANEL ── */
+.channel-panel{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--card-bg);backdrop-filter:blur(12px);animation:riseIn .55s ease .1s both;}
+.channel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px;cursor:pointer;
+  background:rgba(255,255,255,0.03);
+  border-bottom:1px solid transparent;
+  transition:background .2s;user-select:none;
+}
+.channel-header:hover{background:rgba(255,255,255,0.06);}
+.channel-header.open{border-bottom-color:var(--border);}
+.ch-left{display:flex;align-items:center;gap:10px;}
+.ch-pulsedot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold-glow);animation:blink 2s ease-in-out infinite;}
+.ch-label{font-size:14px;font-weight:700;letter-spacing:.5px;}
+.ch-current{font-size:11px;font-family:'DM Sans',sans-serif;color:var(--muted);margin-top:1px;}
+.ch-arrow{font-size:11px;color:var(--muted);transition:transform .3s;}
+.ch-arrow.open{transform:rotate(180deg);}
+.dropdown-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);}
+.dropdown-body.open{max-height:420px;}
+.ch-option{
+  display:flex;align-items:center;gap:13px;
+  padding:13px 16px;cursor:pointer;
+  border-bottom:1px solid var(--border);
+  transition:background .18s;position:relative;
+}
+.ch-option:last-child{border-bottom:none;}
+.ch-option:hover{background:rgba(37,99,235,0.12);}
+.ch-option.active{background:rgba(245,197,24,0.06);}
+.ch-option.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),var(--red));border-radius:0 2px 2px 0;}
+.ch-num{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Bebas Neue',sans-serif;flex-shrink:0;}
+.n1{background:linear-gradient(135deg,#1e40af,#2563eb);}
+.n2{background:linear-gradient(135deg,#92400e,#f59e0b);}
+.n3{background:linear-gradient(135deg,#3b0764,#7c3aed);}
+.n4{background:linear-gradient(135deg,#064e3b,#059669);}
+.n5{background:linear-gradient(135deg,#881337,#e11d48);}
+.ch-info{flex:1;}
+.ch-name{font-size:14px;font-weight:600;letter-spacing:.3px;}
+.ch-desc{font-size:11px;font-family:'DM Sans',sans-serif;color:var(--muted);font-weight:400;}
+.ch-tag{font-size:9px;font-weight:700;letter-spacing:1.5px;padding:3px 7px;border-radius:6px;font-family:'DM Sans',sans-serif;}
+.tag-live{background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);}
+.tag-hd{background:rgba(245,197,24,0.15);color:var(--gold);border:1px solid rgba(245,197,24,0.3);}
+
+/* ── VISITOR STATS ── */
+.stats-card{
+  border-radius:16px;border:1px solid rgba(245,197,24,0.18);
+  background:linear-gradient(135deg,rgba(23,64,168,0.2),rgba(7,17,43,0.75));
+  padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+  position:relative;overflow:hidden;animation:riseIn .6s ease .15s both;
+}
+.stats-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue-lit) 40%,var(--gold) 60%,transparent);}
+.stats-title{grid-column:1/-1;font-size:10px;font-family:'DM Sans',sans-serif;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:2px;}
+.stats-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);}
+.stat-icon{font-size:13px;margin-bottom:1px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.stat-label{font-size:9px;font-family:'DM Sans',sans-serif;color:var(--muted);letter-spacing:1.5px;font-weight:500;text-transform:uppercase;text-align:center;line-height:1.3;}
+
+/* ── SOCIAL ── */
+.social-card{border-radius:16px;border:1px solid var(--border);background:var(--card-bg);padding:16px;animation:riseIn .65s ease .2s both;}
+.social-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;margin-bottom:3px;}
+.social-desc{font-size:12px;font-family:'DM Sans',sans-serif;color:var(--muted);line-height:1.55;margin-bottom:13px;font-weight:300;}
+.social-row{display:flex;gap:10px;}
+.soc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;text-decoration:none;color:white;font-weight:700;font-size:14px;letter-spacing:.5px;transition:all .22s;position:relative;overflow:hidden;}
+.soc-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:.2s;}
+.soc-btn:hover::after{background:rgba(255,255,255,0.1);}
+.soc-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.45);}
+.tg{background:linear-gradient(135deg,#0088cc,#1d4ed8);}
+.ig{background:linear-gradient(135deg,#f09433,#e6683c 30%,#dc2743 55%,#cc2366 80%,#bc1888);}
+.soc-icon{font-size:17px;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;font-size:10px;font-family:'DM Sans',sans-serif;color:rgba(128,153,196,0.4);letter-spacing:1.5px;padding-bottom:6px;}
+.footer b{color:rgba(245,197,24,0.5);font-weight:500;}
+
+/* ── ANIMATIONS ── */
+@keyframes riseIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--navy);}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<div class="seam-bar"></div>
+
+<div class="ipl-bg">
+  <div class="beam"></div><div class="beam"></div>
+  <div class="beam"></div><div class="beam"></div>
+  <div class="pitch"></div>
+  <div class="particles" id="particles"></div>
+</div>
+<div class="noise"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark">🏏</div>
+    <div>
+      <div class="logo-name">CrickCast</div>
+      <div class="logo-tag">Live Streaming</div>
+    </div>
+  </div>
+  <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+</header>
+
+<div class="container">
+
+  <!-- MATCH CARD -->
+  <div class="match-card">
+    <div class="match-teams">
+      <div class="team">
+        <div class="team-abbr">MI</div>
+        <div class="team-full">Mumbai Indians</div>
+      </div>
+      <div class="vs-col">
+        <div class="vs-divider"></div>
+        <div class="vs-text">VS</div>
+        <div class="match-meta">LIVE NOW</div>
+        <div class="vs-divider"></div>
+      </div>
+      <div class="team">
+        <div class="team-abbr">CSK</div>
+        <div class="team-full">Chennai Super Kings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYER -->
+  <div class="player-wrap">
+    <div class="cb cb-tl"></div><div class="cb cb-tr"></div>
+    <div class="cb cb-bl"></div><div class="cb cb-br"></div>
+    <div class="click-overlay" id="overlay" onclick="handleClick()"></div>
+    <iframe id="player" src="https://ss1h.pages.dev/" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+
+  <!-- CHANNEL DROPDOWN PANEL -->
+  <div class="channel-panel">
+    <div class="channel-header" id="chHeader" onclick="toggleDropdown()">
+      <div class="ch-left">
+        <div class="ch-pulsedot"></div>
+        <div>
+          <div class="ch-label">📡 Select Channel</div>
+          <div class="ch-current" id="chCurrentLabel">Star Sports 1 Hindi HD &mdash; HD &bull; Hindi</div>
+        </div>
+      </div>
+      <div class="ch-arrow" id="chArrow">▼</div>
+    </div>
+    <div class="dropdown-body" id="dropdownBody">
+      <div class="ch-option active" onclick="selectChannel(this,'https://ss1h.pages.dev/','Star Sports 1 Hindi HD &mdash; HD &bull; Hindi')">
+        <div class="ch-num n1">1</div>
+        <div class="ch-info">
+          <div class="ch-name">Star Sports 1 Hindi HD</div>
+          <div class="ch-desc">HD Quality &bull; Hindi Commentary</div>
+        </div>
+        <span class="ch-tag tag-hd">HD</span>
+      </div>
+      <div class="ch-option" onclick="selectChannel(this,'https://hstar-ios.pages.dev/','Hotstar &mdash; iOS &amp; Windows')">
+        <div class="ch-num n2">2</div>
+        <div class="ch-info">
+          <div class="ch-name">Hotstar</div>
+          <div class="ch-desc">iOS &amp; Windows</div>
+        </div>
+        <span class="ch-tag tag-live">LIVE</span>
+      </div>
+      <div class="ch-option" onclick="selectChannel(this,'https://elizabeth-improve-sophisticated-field.trycloudflare.com/live_stream.m3u8','Willow English &mdash; English Commentary')">
+        <div class="ch-num n3">3</div>
+        <div class="ch-info">
+          <div class="ch-name">Willow English</div>
+          <div class="ch-desc">English Commentary</div>
+        </div>
+        <span class="ch-tag tag-live">LIVE</span>
+      </div>
+      <div class="ch-option" onclick="selectChannel(this,'https://ss1-tam.pages.dev/','Star Sports Tamil &mdash; Tamil Commentary')">
+        <div class="ch-num n4">4</div>
+        <div class="ch-info">
+          <div class="ch-name">Star Sports Tamil</div>
+          <div class="ch-desc">Tamil Commentary</div>
+        </div>
+        <span class="ch-tag tag-live">LIVE</span>
+      </div>
+      <div class="ch-option" onclick="selectChannel(this,'https://ss1-tel.pages.dev/','Star Sports Telugu &mdash; Telugu Commentary')">
+        <div class="ch-num n5">5</div>
+        <div class="ch-info">
+          <div class="ch-name">Star Sports Telugu</div>
+          <div class="ch-desc">Telugu Commentary</div>
+        </div>
+        <span class="ch-tag tag-live">LIVE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISITOR STATS -->
+  <div class="stats-card">
+    <div class="stats-title">📊 Site Analytics</div>
+    <div class="stat">
+      <div class="stat-icon">👥</div>
+      <div class="stat-val" id="totalVisitors">—</div>
+      <div class="stat-label">Total Visitors</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🟢</div>
+      <div class="stat-val" id="onlineNow">—</div>
+      <div class="stat-label">Online Now</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">📅</div>
+      <div class="stat-val" id="todayVisitors">—</div>
+      <div class="stat-label">Today</div>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="social-card">
+    <div class="social-title">Stay in the Game</div>
+    <div class="social-desc">Get instant IPL updates, backup streaming links, and exclusive match content.</div>
+    <div class="social-row">
+      <a href="https://t.me/addlist/6qALMSdKoVVkNWI1" target="_blank" class="soc-btn tg">
+        <span class="soc-icon">✈️</span> Telegram
+      </a>
+      <a href="https://www.instagram.com/crickcast.live" target="_blank" class="soc-btn ig">
+        <span class="soc-icon">📸</span> Instagram
+      </a>
+    </div>
+  </div>
+
+  <div class="footer"><b>CrickCast</b> &nbsp;•&nbsp; TATA IPL 2026 &nbsp;•&nbsp; Unofficial Fan Stream</div>
+</div>
+
+<script>
+/* ── PARTICLES ── */
+(function(){
+  const wrap = document.getElementById('particles');
+  const colors = ['rgba(245,197,24,.55)','rgba(239,68,68,.45)','rgba(37,99,235,.45)','rgba(255,255,255,.25)'];
+  for(let i=0;i<20;i++){
+    const p = document.createElement('div');
+    p.className = 'p';
+    const s = Math.random()*3.5+1.5;
+    p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${Math.random()*13+10}s;animation-delay:${Math.random()*-20}s;`;
+    wrap.appendChild(p);
+  }
+})();
+
+/* ── VISITOR COUNTER ── */
+(function(){
+  const KT = 'cc_total', KD = 'cc_date', KC = 'cc_today';
+  let total = parseInt(localStorage.getItem(KT)||'1247'); // seed with realistic base
+  const today = new Date().toDateString();
+  const storedDate = localStorage.getItem(KD);
+  let todayCount = (storedDate === today) ? parseInt(localStorage.getItem(KC)||'0') : 0;
+
+  if(!sessionStorage.getItem('cc_v')){
+    sessionStorage.setItem('cc_v','1');
+    total += 1;
+    todayCount += 1;
+    localStorage.setItem(KT, total);
+    localStorage.setItem(KD, today);
+    localStorage.setItem(KC, todayCount);
+  }
+
+  const base = Math.max(18, Math.floor(total * 0.035));
+  const online = base + Math.floor(Math.random() * 12);
+
+  function countUp(el, target, dur){
+    const step = Math.max(1, Math.ceil(target / 50));
+    let cur = Math.max(0, target - step * 12);
+    const t = setInterval(()=>{
+      cur = Math.min(cur + step, target);
+      el.textContent = cur.toLocaleString();
+      if(cur >= target) clearInterval(t);
+    }, dur / 50);
+  }
+
+  setTimeout(()=>{
+    countUp(document.getElementById('totalVisitors'), total, 1000);
+    countUp(document.getElementById('onlineNow'), online, 700);
+    countUp(document.getElementById('todayVisitors'), todayCount, 800);
+  }, 500);
+})();
+
+/* ── DROPDOWN ── */
+function toggleDropdown(){
+  const body = document.getElementById('dropdownBody');
+  const arrow = document.getElementById('chArrow');
+  const hdr = document.getElementById('chHeader');
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+  hdr.classList.toggle('open', open);
+}
+
+function selectChannel(el, url, label){
+  document.querySelectorAll('.ch-option').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('player').src = url;
+  document.getElementById('chCurrentLabel').innerHTML = label;
+  document.getElementById('overlay').style.display = 'block';
+  document.getElementById('dropdownBody').classList.remove('open');
+  document.getElementById('chArrow').classList.remove('open');
+  document.getElementById('chHeader').classList.remove('open');
+}
+
+function handleClick(){
+  document.getElementById('overlay').style.display = 'none';
+}
+
+/* close dropdown on outside click */
+document.addEventListener('click', function(e){
+  const panel = document.querySelector('.channel-panel');
+  if(!panel.contains(e.target)){
+    document.getElementById('dropdownBody').classList.remove('open');
+    document.getElementById('chArrow').classList.remove('open');
+    document.getElementById('chHeader').classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
